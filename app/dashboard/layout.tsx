@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
 import { Header } from "@/components/header";
 
 
 import "@fortawesome/fontawesome-svg-core/styles.css"; // Import the CSS
 import { config } from "@fortawesome/fontawesome-svg-core";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
 // Tell Font Awesome to skip adding the CSS automatically since it's imported above
-config.autoAddCss = false; 
+config.autoAddCss = false;
 
 
 const geistSans = Geist({
@@ -31,11 +33,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="pt-br">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Header />
+        <SidebarProvider>
+          <AppSidebar />
+          <main>
+            <SidebarTrigger />
+            {children}
+          </main>
+        </SidebarProvider>
         {children}
       </body>
     </html>

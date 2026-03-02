@@ -10,6 +10,5 @@ export async function GET(request: NextRequest) {
     await supabase.auth.exchangeCodeForSession(code);
   }
 
-  // After confirming email, redirect to complete profile
   return NextResponse.redirect(new URL("/onboarding", request.url));
 }

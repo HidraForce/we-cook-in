@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import type { User } from "@supabase/supabase-js";
 
-// ✅ Moved OUTSIDE Header
+
 const UserMenu = ({ user, onSignOut }: { user: User; onSignOut: () => void }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -39,7 +39,7 @@ const UserMenu = ({ user, onSignOut }: { user: User; onSignOut: () => void }) =>
           <Link href="/dashboard" onClick={() => setDropdownOpen(false)} className="block px-4 py-2 hover:bg-amber-100 transition-colors ">
             Dashboard
           </Link>
-          <Link href="/profile" onClick={() => setDropdownOpen(false)} className="block px-4 py-2 hover:bg-amber-100 transition-colors">
+          <Link href="/dashboard/profile" onClick={() => setDropdownOpen(false)} className="block px-4 py-2 hover:bg-amber-100 transition-colors">
             Profile
           </Link>
           <hr className="my-1 border-gray-200" />
@@ -130,7 +130,6 @@ export const Header = () => {
         )}
       </div>
 
-      {/* MOBILE NAV DROPDOWN */}
       <div
         id="mobile-nav"
         className={`absolute top-24 left-0 w-full px-4 transition-all duration-300 z-40 ${
