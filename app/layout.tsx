@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Header } from "@/components/header";
+
+
+import "@fortawesome/fontawesome-svg-core/styles.css"; // Import the CSS
+import { config } from "@fortawesome/fontawesome-svg-core";
+// Tell Font Awesome to skip adding the CSS automatically since it's imported above
+config.autoAddCss = false; 
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,6 +35,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Header />
         {children}
       </body>
     </html>
