@@ -41,5 +41,5 @@ Projeto criação de um site para ajudar meu irmão com uma ativade do curso de 
 
 #.ENV example
 
-NEXT_PUBLIC_SUPABASE_URL={Your_URL}
-NEXT_PUBLIC_SUPABASE_ANON_KEY={Your_key}
+- NEXT_PUBLIC_SUPABASE_URL={Your_URL}
+- NEXT_PUBLIC_SUPABASE_ANON_KEY={Your_key}
