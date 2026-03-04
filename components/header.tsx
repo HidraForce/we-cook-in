@@ -7,6 +7,7 @@ import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
+import { isAdminEmail } from "@/lib/admin";
 import type { User } from "@supabase/supabase-js";
 
 
@@ -42,6 +43,11 @@ const UserMenu = ({ user, onSignOut }: { user: User; onSignOut: () => void }) =>
           <Link href="/dashboard/profile" onClick={() => setDropdownOpen(false)} className="block px-4 py-2 hover:bg-amber-100 transition-colors">
             Profile
           </Link>
+          {isAdminEmail(user.email) && (
+            <Link href="/admin" onClick={() => setDropdownOpen(false)} className="block px-4 py-2 hover:bg-purple-100 text-purple-700 transition-colors font-medium">
+              Admin
+            </Link>
+          )}
           <hr className="my-1 border-gray-200" />
           <button onClick={onSignOut} className="w-full text-left px-4 py-2 hover:bg-red-100 text-red-600 transition-colors">
             Sign Out

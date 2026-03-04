@@ -10,21 +10,27 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { Book, Home, Settings, Users, Video, Wallet } from "lucide-react"
+import { Book, Home, Settings, Shield, Users, Video, Wallet } from "lucide-react"
+import { createClient } from "@/utils/supabase/server"
+import { isAdminEmail } from "@/lib/admin"
 
 const items = [
   { title: "Bem vindo", url: "/dashboard", icon: Home },
   { title: "Todas as aulas", url: "/dashboard/all", icon: Video },
   { title: "Leia o ebook", url: "/dashboard/ebook", icon: Book },
 ]
-const Profile = [
+const profileItems = [
   { title: "Meu perfil", url: "/dashboard/profile", icon: Users },
   { title: "Pagamentos", url: "/dashboard/payments", icon: Wallet },
   { title: "Configurações", url: "/dashboard/settings", icon: Settings },
 ]
 
 
-export function AppSidebar() {
+export async function AppSidebar() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  const admin = isAdminEmail(user?.email)
+
   return (
     <Sidebar>
       <SidebarHeader>
@@ -53,7 +59,7 @@ export function AppSidebar() {
           <SidebarGroupLabel>Perfil</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {Profile.map((item) => (
+              {profileItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <a href={item.url}>
@@ -66,6 +72,23 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        {admin && (
+          <SidebarGroup>
+            <SidebarGroupLabel>Administração</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <a href="/admin">
+                      <Shield />
+                      <span>Painel Admin</span>
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
       </SidebarContent>
 
       <SidebarFooter>
