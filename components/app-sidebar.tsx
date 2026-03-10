@@ -10,7 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { Book, Home, Settings, Shield, Users, Video, Wallet } from "lucide-react"
+import { Book, Home, MessageSquare, Settings, Shield, Users, Video, Wallet } from "lucide-react"
 import { createClient } from "@/utils/supabase/server"
 import { isAdminEmail } from "@/lib/admin"
 
@@ -18,6 +18,7 @@ const items = [
   { title: "Bem vindo", url: "/dashboard", icon: Home },
   { title: "Todas as aulas", url: "/dashboard/all", icon: Video },
   { title: "Leia o ebook", url: "/dashboard/ebook", icon: Book },
+  { title: "Fórum", url: "/dashboard/forum", icon: MessageSquare },
 ]
 const profileItems = [
   { title: "Meu perfil", url: "/dashboard/profile", icon: Users },
