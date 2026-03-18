@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Heart, MessageSquare, Bookmark, Trash2, Loader2, UserPlus } from "lucide-react";
 import { toggleLike, toggleSavePost, deletePost, sendFriendRequest } from "./actions";
-import { resolveImageUrl } from "@/lib/image-url";
+import { resolveAvatarUrl, resolveImageUrl } from "@/lib/image-url";
 import Link from "next/link";
 
 type PostCardProps = {
@@ -18,7 +18,7 @@ type PostCardProps = {
     image_url: string | null;
     created_at: string;
     user_id: string;
-    profiles: { full_name: string; username: string; avatar_url: string | null };
+    profiles: { full_name: string; username: string; avatar_url: string | null } | null;
     like_count: number;
     comment_count: number;
   };
@@ -34,6 +34,7 @@ export function PostCard({ post, currentUserId, isLiked, isSaved, isFriend }: Po
   const [likeCount, setLikeCount] = useState(post.like_count);
   const [loading, setLoading] = useState<string | null>(null);
   const isOwner = post.user_id === currentUserId;
+  const profile = post.profiles ?? { full_name: "Usuário", username: "usuario", avatar_url: null };
 
   async function handleLike() {
     setLoading("like");
@@ -72,17 +73,15 @@ export function PostCard({ post, currentUserId, isLiked, isSaved, isFriend }: Po
         <div className="flex items-center justify-between p-4 pb-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-muted overflow-hidden shrink-0">
-              {post.profiles.avatar_url ? (
-                <img src={resolveImageUrl(post.profiles.avatar_url)} alt="" className="w-full h-full object-cover" />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-sm font-bold text-muted-foreground">
-                  {post.profiles.full_name.charAt(0)}
-                </div>
-              )}
+              <img
+                src={resolveAvatarUrl(profile.avatar_url)}
+                alt=""
+                className="w-full h-full object-cover"
+              />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <p className="text-sm font-semibold">{post.profiles.full_name}</p>
+                <p className="text-sm font-semibold">{profile.full_name}</p>
                 {!isOwner && !isFriend && (
                   <Button
                     variant="ghost"
@@ -96,7 +95,7 @@ export function PostCard({ post, currentUserId, isLiked, isSaved, isFriend }: Po
                 )}
               </div>
               <p className="text-xs text-muted-foreground">
-                @{post.profiles.username} · {timeAgo}
+                @{profile.username} · {timeAgo}
               </p>
             </div>
           </div>

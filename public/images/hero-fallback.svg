@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-label="Hero fallback background">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFEDD5"/>
+      <stop offset="40%" stop-color="#FFE4E6"/>
+      <stop offset="100%" stop-color="#E0F2FE"/>
+    </linearGradient>
+    <radialGradient id="r" cx="30%" cy="20%" r="70%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1600" height="900" rx="56" fill="url(#g)"/>
+  <circle cx="420" cy="240" r="340" fill="url(#r)"/>
+  <circle cx="1250" cy="620" r="420" fill="url(#r)"/>
+  <path d="M0 700 C 260 640, 380 820, 640 760 C 900 700, 980 880, 1240 820 C 1420 780, 1520 820, 1600 800 L 1600 900 L 0 900 Z"
+        fill="#FFFFFF" fill-opacity="0.35"/>
+  <g fill="#FB923C" fill-opacity="0.25">
+    <circle cx="1120" cy="220" r="14"/>
+    <circle cx="1160" cy="260" r="10"/>
+    <circle cx="1080" cy="270" r="8"/>
+  </g>
+</svg>

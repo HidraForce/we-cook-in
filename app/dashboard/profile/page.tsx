@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Video, MessageSquare, Heart, BookmarkCheck, Trophy } from "lucide-react";
 import { ProfileEditor } from "./profile-editor";
 import { FriendsSection } from "./friends-section";
-import { resolveImageUrl } from "@/lib/image-url";
+import { resolveAvatarUrl, resolveBannerUrl } from "@/lib/image-url";
 
 export default async function Profile() {
   const supabase = await createClient();
@@ -127,8 +127,8 @@ export default async function Profile() {
           username: profile.username,
           birth: profile.birth,
           address: profile.address,
-          avatar_url: resolveImageUrl(profile.avatar_url),
-          banner_url: resolveImageUrl(profile.banner_url),
+          avatar_url: resolveAvatarUrl(profile.avatar_url),
+          banner_url: resolveBannerUrl(profile.banner_url),
         }}
         email={user.email ?? ""}
       />

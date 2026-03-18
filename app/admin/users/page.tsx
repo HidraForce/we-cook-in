@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { isAdminEmail } from "@/lib/admin";
+import { resolveAvatarUrl } from "@/lib/image-url";
 
 function getInitials(name: string | null): string {
   if (!name) return "?";
@@ -75,7 +76,7 @@ export default async function AdminUsers() {
                       <TableCell>
                         <Avatar className="h-8 w-8">
                           <AvatarImage
-                            src={profile.avatar_url}
+                            src={resolveAvatarUrl(profile.avatar_url)}
                             alt={profile.full_name}
                           />
                           <AvatarFallback className="text-xs">

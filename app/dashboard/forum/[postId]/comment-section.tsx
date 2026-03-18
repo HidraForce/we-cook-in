@@ -5,14 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2, Send, Trash2 } from "lucide-react";
 import { createComment, deleteComment } from "../actions";
-import { resolveImageUrl } from "@/lib/image-url";
+import { resolveAvatarUrl } from "@/lib/image-url";
 
 type Comment = {
   id: string;
   content: string;
   created_at: string;
   user_id: string;
-  profiles: { full_name: string; username: string; avatar_url: string | null };
+  profiles: { full_name: string; username: string; avatar_url: string | null } | null;
 };
 
 export function CommentSection({
@@ -76,6 +76,8 @@ export function CommentSection({
       <div className="space-y-3">
         {comments.map((comment) => {
           const isOwner = comment.user_id === currentUserId;
+          const profile =
+            comment.profiles ?? { full_name: "Usuário", username: "usuario", avatar_url: null };
 
           return (
             <div
@@ -83,25 +85,19 @@ export function CommentSection({
               className="flex gap-3 p-3 rounded-lg bg-muted/30"
             >
               <div className="w-8 h-8 rounded-full bg-muted overflow-hidden shrink-0">
-                {comment.profiles.avatar_url ? (
-                  <img
-                    src={resolveImageUrl(comment.profiles.avatar_url)}
-                    alt=""
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-xs font-bold text-muted-foreground">
-                    {comment.profiles.full_name.charAt(0)}
-                  </div>
-                )}
+                <img
+                  src={resolveAvatarUrl(profile.avatar_url)}
+                  alt=""
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-semibold">
-                    {comment.profiles.full_name}
+                    {profile.full_name}
                   </span>
                   <span className="text-xs text-muted-foreground">
-                    @{comment.profiles.username}
+                    @{profile.username}
                   </span>
                 </div>
                 <p className="text-sm mt-0.5 whitespace-pre-line">{comment.content}</p>

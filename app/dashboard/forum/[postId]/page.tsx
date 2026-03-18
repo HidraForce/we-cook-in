@@ -8,6 +8,16 @@ import Link from "next/link";
 import { PostCard } from "../post-card";
 import { CommentSection } from "./comment-section";
 
+type Profile = { full_name: string; username: string; avatar_url: string | null };
+
+function normalizeProfile(p: Profile | null | undefined): Profile {
+  return {
+    full_name: p?.full_name ?? "Usuário",
+    username: p?.username ?? "usuario",
+    avatar_url: p?.avatar_url ?? null,
+  };
+}
+
 export default async function PostDetail({
   params,
 }: {
@@ -71,7 +81,7 @@ export default async function PostDetail({
       <PostCard
         post={{
           ...post,
-          profiles: post.profiles as { full_name: string; username: string; avatar_url: string | null },
+          profiles: normalizeProfile(post.profiles as Profile | null | undefined),
           like_count: (likes ?? []).length,
           comment_count: (comments ?? []).length,
         }}
@@ -87,7 +97,7 @@ export default async function PostDetail({
             postId={postId}
             comments={(comments ?? []).map((c) => ({
               ...c,
-              profiles: c.profiles as { full_name: string; username: string; avatar_url: string | null },
+              profiles: normalizeProfile(c.profiles as Profile | null | undefined),
             }))}
             currentUserId={user.id}
           />

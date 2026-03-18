@@ -13,7 +13,7 @@ import {
   Users,
 } from "lucide-react";
 import { respondFriendRequest, removeFriend } from "../forum/actions";
-import { resolveImageUrl } from "@/lib/image-url";
+import { resolveAvatarUrl } from "@/lib/image-url";
 import Link from "next/link";
 
 type Friend = {
@@ -83,13 +83,11 @@ export function FriendsSection({
               >
                 <div className="flex items-center gap-2 min-w-0">
                   <div className="w-8 h-8 rounded-full bg-muted overflow-hidden shrink-0">
-                    {req.avatar_url ? (
-                      <img src={resolveImageUrl(req.avatar_url)} alt="" className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-xs font-bold text-muted-foreground">
-                        {req.full_name.charAt(0)}
-                      </div>
-                    )}
+                    <img
+                      src={resolveAvatarUrl(req.avatar_url)}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                   <div className="min-w-0">
                     <p className="text-sm font-medium truncate">{req.full_name}</p>
@@ -153,13 +151,11 @@ export function FriendsSection({
                   >
                     <div className="flex items-center gap-2 min-w-0">
                       <div className="w-8 h-8 rounded-full bg-muted overflow-hidden shrink-0">
-                        {friend.avatar_url ? (
-                          <img src={resolveImageUrl(friend.avatar_url)} alt="" className="w-full h-full object-cover" />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-xs font-bold text-muted-foreground">
-                            {friend.full_name.charAt(0)}
-                          </div>
-                        )}
+                        <img
+                          src={resolveAvatarUrl(friend.avatar_url)}
+                          alt=""
+                          className="w-full h-full object-cover"
+                        />
                       </div>
                       <div className="min-w-0">
                         <p className="text-sm font-medium truncate">{friend.full_name}</p>
@@ -214,13 +210,11 @@ export function FriendsSection({
                     className="flex items-start gap-3 p-2 rounded-md hover:bg-muted/50 transition-colors"
                   >
                     <div className="w-8 h-8 rounded-full bg-muted overflow-hidden shrink-0 mt-0.5">
-                      {post.profiles.avatar_url ? (
-                        <img src={resolveImageUrl(post.profiles.avatar_url)} alt="" className="w-full h-full object-cover" />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-xs font-bold text-muted-foreground">
-                          {post.profiles.full_name.charAt(0)}
-                        </div>
-                      )}
+                      <img
+                        src={resolveAvatarUrl(post.profiles.avatar_url)}
+                        alt=""
+                        className="w-full h-full object-cover"
+                      />
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-medium truncate">{post.title}</p>

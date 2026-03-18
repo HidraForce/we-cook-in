@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { updateProfile, type ProfileFormState } from "./actions";
 import { Camera, Loader2, Pencil, X, Check } from "lucide-react";
+import { resolveAvatarUrl, resolveBannerUrl } from "@/lib/image-url";
 
 type Profile = {
   id: string;
@@ -30,8 +31,8 @@ export function ProfileEditor({
     updateProfile,
     {}
   );
-  const [avatarUrl, setAvatarUrl] = useState(profile.avatar_url ?? "");
-  const [bannerUrl, setBannerUrl] = useState(profile.banner_url ?? "");
+  const [avatarUrl, setAvatarUrl] = useState(resolveAvatarUrl(profile.avatar_url));
+  const [bannerUrl, setBannerUrl] = useState(resolveBannerUrl(profile.banner_url));
   const [uploading, setUploading] = useState<"avatar" | "banner" | null>(null);
   const avatarInput = useRef<HTMLInputElement>(null);
   const bannerInput = useRef<HTMLInputElement>(null);
@@ -66,31 +67,13 @@ export function ProfileEditor({
       <div className="space-y-6">
         {/* Banner */}
         <div className="relative w-full h-48 md:h-60 rounded-2xl overflow-hidden bg-muted">
-          {bannerUrl ? (
-            <img
-              src={bannerUrl}
-              alt="Banner"
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <div className="w-full h-full bg-linear-to-br from-primary/20 to-primary/5" />
-          )}
+          <img src={bannerUrl} alt="Banner" className="w-full h-full object-cover" />
         </div>
 
         {/* Avatar + Info */}
         <div className="flex flex-col items-center -mt-20 relative z-10">
           <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-background bg-muted">
-            {avatarUrl ? (
-              <img
-                src={avatarUrl}
-                alt={profile.full_name}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full bg-primary/10 flex items-center justify-center text-4xl font-bold text-primary/40">
-                {profile.full_name.charAt(0).toUpperCase()}
-              </div>
-            )}
+            <img src={avatarUrl} alt={profile.full_name} className="w-full h-full object-cover" />
           </div>
           <h1 className="text-2xl font-bold mt-3">{profile.full_name}</h1>
           <p className="text-muted-foreground">@{profile.username}</p>
@@ -137,11 +120,7 @@ export function ProfileEditor({
     <div className="space-y-6">
       {/* Editable Banner */}
       <div className="relative w-full h-48 md:h-60 rounded-2xl overflow-hidden bg-muted group">
-        {bannerUrl ? (
-          <img src={bannerUrl} alt="Banner" className="w-full h-full object-cover" />
-        ) : (
-          <div className="w-full h-full bg-linear-to-br from-primary/20 to-primary/5" />
-        )}
+        <img src={bannerUrl} alt="Banner" className="w-full h-full object-cover" />
         <button
           type="button"
           onClick={() => bannerInput.current?.click()}
@@ -170,13 +149,7 @@ export function ProfileEditor({
       <div className="flex flex-col items-center -mt-20 relative z-10">
         <div className="relative group">
           <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-background bg-muted">
-            {avatarUrl ? (
-              <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full bg-primary/10 flex items-center justify-center text-4xl font-bold text-primary/40">
-                {profile.full_name.charAt(0).toUpperCase()}
-              </div>
-            )}
+            <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
           </div>
           <button
             type="button"
