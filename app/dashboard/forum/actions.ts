@@ -17,6 +17,16 @@ export async function createPost(
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: "Não autorizado." };
 
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("id")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if (!profile) {
+    return { error: "Complete seu perfil em /onboarding antes de criar um post." };
+  }
+
   const title = formData.get("title") as string;
   const content = formData.get("content") as string;
   const category = formData.get("category") as string;
