@@ -1,9 +1,12 @@
 import { createClient } from "@/utils/supabase/server";
+import { createAdminClient } from "@/utils/supabase/admin";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Plus, MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { PostCard } from "./post-card";
+
+type Profile = { id: string; full_name: string | null; username: string | null; avatar_url: string | null };
 
 export default async function Forum() {
   const supabase = await createClient();
@@ -12,8 +15,20 @@ export default async function Forum() {
 
   const { data: posts } = await supabase
     .from("posts")
-    .select("*, profiles(full_name, username, avatar_url)")
+    .select("*")
     .order("created_at", { ascending: false });
+
+  const userIds = Array.from(new Set((posts ?? []).map((p) => p.user_id).filter(Boolean)));
+  const admin = createAdminClient();
+  const { data: profiles } = userIds.length
+    ? await admin
+        .from("profiles")
+        .select("id, full_name, username, avatar_url")
+        .in("id", userIds)
+    : { data: [] as Profile[] };
+
+  const profileMap = new Map<string, Profile>();
+  (profiles ?? []).forEach((p) => profileMap.set(p.id, p));
 
   // Get like counts
   const postIds = (posts ?? []).map((p) => p.id);
@@ -93,7 +108,11 @@ export default async function Forum() {
               key={post.id}
               post={{
                 ...post,
-                profiles: post.profiles as { full_name: string; username: string; avatar_url: string | null },
+                profiles: {
+                  full_name: profileMap.get(post.user_id)?.full_name ?? "Usuário",
+                  username: profileMap.get(post.user_id)?.username ?? "usuario",
+                  avatar_url: profileMap.get(post.user_id)?.avatar_url ?? null,
+                },
                 like_count: likeCountMap.get(post.id) ?? 0,
                 comment_count: commentCountMap.get(post.id) ?? 0,
               }}

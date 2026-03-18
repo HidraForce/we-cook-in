@@ -1,4 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
+import { createAdminClient } from "@/utils/supabase/admin";
 import { redirect, notFound } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -8,10 +9,11 @@ import Link from "next/link";
 import { PostCard } from "../post-card";
 import { CommentSection } from "./comment-section";
 
-type Profile = { full_name: string; username: string; avatar_url: string | null };
+type Profile = { id: string; full_name: string | null; username: string | null; avatar_url: string | null };
 
 function normalizeProfile(p: Profile | null | undefined): Profile {
   return {
+    id: p?.id ?? "",
     full_name: p?.full_name ?? "Usuário",
     username: p?.username ?? "usuario",
     avatar_url: p?.avatar_url ?? null,
@@ -30,18 +32,45 @@ export default async function PostDetail({
 
   const { data: post } = await supabase
     .from("posts")
-    .select("*, profiles(full_name, username, avatar_url)")
+    .select("*")
     .eq("id", postId)
     .single();
 
   if (!post) notFound();
+
+  const admin = createAdminClient();
+  const [{ data: postProfile }, { data: commentProfiles }] = await Promise.all([
+    admin
+      .from("profiles")
+      .select("id, full_name, username, avatar_url")
+      .eq("id", post.user_id)
+      .maybeSingle(),
+    admin
+      .from("profiles")
+      .select("id, full_name, username, avatar_url")
+      .in(
+        "id",
+        Array.from(
+          new Set(
+            (
+              (
+                await supabase
+                  .from("comments")
+                  .select("user_id")
+                  .eq("post_id", postId)
+              ).data ?? []
+            ).map((c) => c.user_id)
+          )
+        )
+      ),
+  ]);
 
   const [{ data: likes }, { data: comments }, { data: userLike }, { data: userSave }, { data: friendships }] =
     await Promise.all([
       supabase.from("post_likes").select("id").eq("post_id", postId),
       supabase
         .from("comments")
-        .select("*, profiles(full_name, username, avatar_url)")
+        .select("*")
         .eq("post_id", postId)
         .order("created_at", { ascending: true }),
       supabase
@@ -69,6 +98,9 @@ export default async function PostDetail({
     )
   );
 
+  const commentProfileMap = new Map<string, Profile>();
+  (commentProfiles ?? []).forEach((p) => commentProfileMap.set(p.id, p));
+
   return (
     <div className="p-8 max-w-2xl mx-auto space-y-6">
       <Button variant="outline" size="sm" asChild>
@@ -81,7 +113,7 @@ export default async function PostDetail({
       <PostCard
         post={{
           ...post,
-          profiles: normalizeProfile(post.profiles as Profile | null | undefined),
+          profiles: normalizeProfile(postProfile as Profile | null | undefined),
           like_count: (likes ?? []).length,
           comment_count: (comments ?? []).length,
         }}
@@ -97,7 +129,7 @@ export default async function PostDetail({
             postId={postId}
             comments={(comments ?? []).map((c) => ({
               ...c,
-              profiles: normalizeProfile(c.profiles as Profile | null | undefined),
+              profiles: normalizeProfile(commentProfileMap.get(c.user_id) ?? null),
             }))}
             currentUserId={user.id}
           />
