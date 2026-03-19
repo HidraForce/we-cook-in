@@ -1,12 +1,15 @@
 "use client";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 export default function LoginPage() {
     const supabase = createClient();
     const router = useRouter();
-    const [isLogin, setIsLogin] = useState(true);
+    const searchParams = useSearchParams();
+    const initialMode = searchParams.get("mode");
+    const [isLogin, setIsLogin] = useState(initialMode !== "signup");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
